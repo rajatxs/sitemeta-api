@@ -34,33 +34,30 @@ export class MetaProvider {
       }
 
       this.#content = await response.text();
-      // console.log("START HTML", this.#html, this.#content);
 
       this.#html = cheerio.load(this.#content);
-      console.log("END HTML", this.#html)
    }
 
-   title() {
-      console.log("HTML", this.#html)
+   _title_() {
       return (
          this.#html('title').text() ||
          this.#html("meta[name='apple-mobile-web-app-title']").attr('content')
       );
    }
 
-   description() {
+   _description_() {
       return (
          this.#html("meta[name='description']").attr('content')
       );
    }
 
-   thumb() {
+   _thumb_() {
       return (
          this.#html("meta[property='og:image']").attr('content')
       );
    }
 
-   icon() {
+   _icon_() {
       let icon = this.#html("link[rel='shortcut icon'], link[rel='icon shortcut'], link[rel='icon']").attr('href') || '';
 
       if (!isAbolute(icon)) {
@@ -70,12 +67,31 @@ export class MetaProvider {
       return icon;
    }
 
+   resolveProps(props = []) {
+      let obj = {};
+      if (props.length === 0) {
+         return this.toObject();
+      }
+
+      props.forEach(prop => {
+         let propName = '_' + prop + '_';
+
+         if (typeof this[propName] === 'function') {
+            obj[prop] = this[propName]();
+         }
+      });
+
+      console.log("PROPS", obj)
+
+      return obj;
+   }
+
    toObject() {
       return {
-         title: this.title(),
-         description: this.description(),
-         thumb: this.thumb(),
-         icon: this.icon()
+         title: this._title_(),
+         description: this._description_(),
+         thumb: this._thumb_(),
+         icon: this._icon_()
       }
    }
 }
