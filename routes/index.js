@@ -3,7 +3,7 @@ import metaRouter from './meta.js'
 
 const router = Router();
 
-router.use(metaRouter);
+router.use('/v1/meta', metaRouter);
 
 /** 
  * Testing endpoint
