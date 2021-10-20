@@ -1,0 +1,15 @@
+
+### Fetch site metadata
+GET http://localhost:5000/v1d/meta?url=https://developar.in
+Accept: application/json
+Accept-Language: en
+
+### Fetch site metadata
+POST http://localhost:5000/v1/meta
+Accept: application/json
+Accept-Language: en
+Content-Type: application/json
+
+{
+   "url": "https://developar.in"
+}
